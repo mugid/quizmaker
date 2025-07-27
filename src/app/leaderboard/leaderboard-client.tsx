@@ -63,7 +63,7 @@ interface UserStats {
   currentStreak?: number | null
   longestStreak?: number | null
   rank?: number | null
-  updatedAt?: string
+  updatedAt?: Date
 }
 
 interface LeaderboardClientProps {

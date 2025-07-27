@@ -6,8 +6,6 @@ export async function getLeaderboardData(userId: string) {
   try {
     const [globalLeaderboard, userStats] = await Promise.all([getGlobalLeaderboard(50), getUserStats(userId)])
 
-    // Mock data for top creators and category leaders since they're not in your queries
-    // You can implement these queries later
     const topCreators = [
       {
         id: "4",

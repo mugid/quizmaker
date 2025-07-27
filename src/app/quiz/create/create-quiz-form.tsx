@@ -9,9 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { QuestionBuilder } from "@/components/quiz/quiz-builder";
-import { createQuizAction } from './actions'
-import { Plus, Save, Eye, X, Clock, Target } from "lucide-react"
+import { createQuizAction, generateAndCreateQuizAction } from './actions'
+import { Plus, Save, Eye, X, Clock, Target, Sparkles } from "lucide-react"
 import { toast } from "sonner"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 
 interface Question {
   id: string
@@ -41,6 +42,11 @@ export function CreateQuizForm({ currentUserId }: CreateQuizFormProps) {
 
   const [newTag, setNewTag] = useState("")
   const [questions, setQuestions] = useState<Question[]>([])
+
+  // AI Modal state
+  const [aiModalOpen, setAiModalOpen] = useState(false)
+  const [aiTopic, setAiTopic] = useState("")
+  const [aiLoading, setAiLoading] = useState(false)
 
   const addTag = () => {
     if (newTag.trim() && !quiz.tags.includes(newTag.trim())) {
@@ -122,13 +128,36 @@ export function CreateQuizForm({ currentUserId }: CreateQuizFormProps) {
         publish,
       )
 
-      if (result.error) {
+      if ("error" in result && result.error) {
         toast.error(result.error)
-      } else if (result.success && result.quizId) {
+      } else if ("success" in result && result.success && "quizId" in result && result.quizId) {
         toast.success(publish ? "Quiz published successfully!" : "Quiz saved as draft!")
         router.push(`/quiz/${result.quizId}`)
       }
     })
+  }
+
+  // AI Quiz Generation
+  const handleGenerateQuiz = async () => {
+    if (!aiTopic.trim()) {
+      toast.error("Please enter a topic.")
+      return
+    }
+    setAiLoading(true)
+    try {
+      const result = await generateAndCreateQuizAction(aiTopic, currentUserId)
+      if ("error" in result && result.error) {
+        toast.error(result.error)
+      } else if ("success" in result && result.success && "quizId" in result && result.quizId) {
+        toast.success("Quiz generated and published!")
+        setAiModalOpen(false)
+        router.push(`/quiz/${result.quizId}`)
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to generate quiz.")
+    } finally {
+      setAiLoading(false)
+    }
   }
 
   return (
@@ -139,9 +168,9 @@ export function CreateQuizForm({ currentUserId }: CreateQuizFormProps) {
           <p className="text-muted-foreground">Build an interactive quiz to share with others</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => handleSave(false)} disabled={isPending}>
-            <Save className="h-4 w-4 mr-2" />
-            Save Draft
+          <Button variant="outline" onClick={() => setAiModalOpen(true)} disabled={isPending}>
+            <Sparkles className="h-4 w-4 mr-2" />
+            Create with AI
           </Button>
           <Button onClick={() => handleSave(true)} disabled={isPending}>
             <Eye className="h-4 w-4 mr-2" />
@@ -282,6 +311,29 @@ export function CreateQuizForm({ currentUserId }: CreateQuizFormProps) {
           ))
         )}
       </div>
+
+      {/* AI Modal */}
+      <Dialog open={aiModalOpen} onOpenChange={setAiModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Generate Quiz with AI</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Topic</label>
+            <Input
+              value={aiTopic}
+              onChange={(e) => setAiTopic(e.target.value)}
+              placeholder="Enter quiz topic..."
+              disabled={aiLoading}
+            />
+          </div>
+          <DialogFooter className="mt-4">
+            <Button onClick={handleGenerateQuiz} disabled={aiLoading}>
+              {aiLoading ? "Generating..." : "Generate"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -26,12 +26,12 @@ interface Question {
 interface Quiz {
   id: string;
   title: string;
-  description?: string;
+  description: string | null;
   creatorId: string;
-  tags?: string[];
+  tags: string[] | null;
   totalPoints: number;
   difficulty: 'easy' | 'medium' | 'hard';
-  estimatedTime?: number;
+  estimatedTime: number | null;
   questions: Question[];
 }
 
@@ -125,7 +125,7 @@ export default function QuizTaker({ quiz, userId, bestAttempt }: QuizTakerProps)
           : [question.correctAnswers];
         const userAnswerLower = userAnswer?.toLowerCase()?.trim() || '';
         isCorrect = correctAnswers.some((correct: string) => 
-          correct.toLowerCase().trim() === userAnswerLower
+          typeof correct === 'string' && correct.toLowerCase().trim() === userAnswerLower
         );
       }
 

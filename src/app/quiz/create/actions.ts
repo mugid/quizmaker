@@ -6,6 +6,8 @@ import {
   updateUserQuizCreatedCount,
   checkAndAwardAchievements,
 } from "@/server/queries"
+import { GenerateQuiz } from '@/lib/utils'
+import { redirect } from 'next/navigation'
 
 interface QuestionData {
   id: string
@@ -102,5 +104,30 @@ export async function publishQuizAction(quizId: string) {
   } catch (error) {
     console.error("Error publishing quiz:", error)
     return { error: "Failed to publish quiz" }
+  }
+}
+
+export async function generateAndCreateQuizAction(userInput: string, userId: string) {
+  try {
+    // Generate quiz data from user input
+    const generatedQuiz = await GenerateQuiz(userInput)
+
+    // Ensure generatedQuiz matches QuizFormData interface
+    // If GenerateQuiz returns { object: QuizFormData }, extract the object property
+    const quizFormData: QuizFormData = (generatedQuiz && (generatedQuiz as any).object)
+      ? (generatedQuiz as any).object
+      : generatedQuiz
+
+    // Create the quiz using the generated data
+    const result = await createQuizAction(quizFormData, userId, true)
+
+    if (result.success && result.quizId) {
+      return result
+    } else {
+      return { error: result.error || "Failed to create quiz" }
+    }
+  } catch (error) {
+    console.error("Error generating and creating quiz:", error)
+    return { error: "Failed to generate and create quiz. Please try again." }
   }
 }

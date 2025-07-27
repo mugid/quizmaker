@@ -29,7 +29,7 @@ interface Question {
 interface Quiz {
   id: string;
   title: string;
-  description?: string;
+  description: string | null;
   questions: Question[];
   totalPoints: number;
 }

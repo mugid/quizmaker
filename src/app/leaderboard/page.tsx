@@ -16,5 +16,5 @@ export default async function LeaderboardPage() {
 
   const leaderboardData = await getLeaderboardData(currentUser.user.id)
 
-  return <LeaderboardClient initialData={leaderboardData} currentUserId={currentUser.user.id} />
+  return <LeaderboardClient initialData={leaderboardData} userId={currentUser.user.id} />
 }
