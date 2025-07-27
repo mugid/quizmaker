@@ -255,7 +255,7 @@ export function DashboardClient({ initialData, userId }: DashboardClientProps) {
             <TabsTrigger value="my-quizzes">My Quizzes</TabsTrigger>
             <TabsTrigger value="favorites">Favorites</TabsTrigger>
           </TabsList>
-          <Button className="flex items-center space-x-2" onClick={() => router.push("/create-quiz")}>
+          <Button className="flex items-center space-x-2" onClick={() => router.push("/quiz/create")}>
             <Plus className="h-4 w-4" />
             <span>Create Quiz</span>
           </Button>
