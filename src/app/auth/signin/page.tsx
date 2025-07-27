@@ -49,7 +49,7 @@ export default function SignInPage() {
             onClick={handleGoogleSignIn}
             className="w-full"
             size="lg"
-          ></Button>
+          >Sign In with Google</Button>
         </CardContent>
       </Card>
     </div>
