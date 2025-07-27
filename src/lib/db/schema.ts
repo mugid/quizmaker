@@ -70,6 +70,8 @@ export const quizzes = pgTable('quizzes', {
     tags: text('tags').array(),
     isPublished: boolean('is_published').default(false),
     totalPoints: integer('total_points').default(0),
+    difficulty: varchar('difficulty', { length: 20 }).default('medium'), // easy, medium, hard
+    estimatedTime: integer('estimated_time'), // in minutes
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -101,6 +103,7 @@ export const quizAttempts = pgTable('quiz_attempts', {
     totalPoints: integer('total_points').notNull(),
     percentage: integer('percentage').notNull(),
     answers: jsonb('answers').notNull(),
+    timeSpent: integer('time_spent'), // in seconds
     completedAt: timestamp('completed_at').defaultNow().notNull(),
 });
 
@@ -112,12 +115,43 @@ export const achievements = pgTable('achievements', {
     type: varchar('type', { length: 50 }).notNull(),
     title: text('title').notNull(),
     description: text('description'),
+    iconName: text('icon_name'), // lucide icon name
     earnedAt: timestamp('earned_at').defaultNow().notNull(),
+});
+
+// User statistics for leaderboard and profile
+export const userStats = pgTable('user_stats', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => user.id, { onDelete: 'cascade' })
+        .unique(),
+    totalQuizzesCreated: integer('total_quizzes_created').default(0),
+    totalQuizzesTaken: integer('total_quizzes_taken').default(0),
+    totalPoints: integer('total_points').default(0),
+    averageScore: integer('average_score').default(0), // percentage
+    bestScore: integer('best_score').default(0), // percentage
+    currentStreak: integer('current_streak').default(0),
+    longestStreak: integer('longest_streak').default(0),
+    rank: integer('rank').default(0),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Quiz favorites/bookmarks
+export const quizFavorites = pgTable('quiz_favorites', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => user.id, { onDelete: 'cascade'}),
+    quizId: uuid('quiz_id')
+        .notNull()
+        .references(() => quizzes.id, { onDelete: 'cascade'}),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
 export const schema = {
   user,
   session,
   account,
-  verification,
+  verification
 };

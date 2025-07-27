@@ -8,6 +8,13 @@
       "when": 1753520446835,
       "tag": "0000_dapper_vanisher",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1753607950030,
+      "tag": "0001_bumpy_baron_strucker",
+      "breakpoints": true
     }
   ]
 }
