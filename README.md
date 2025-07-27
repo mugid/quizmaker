@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quizzer
 
-## Getting Started
+**Quizzer** — это веб-приложение для создания и прохождения интерактивных тестов с различными типами вопросов: множественный выбор, чекбоксы и короткий ответ. Пользователи могут создавать собственные тесты, проходить чужие, отслеживать прогресс и зарабатывать достижения.
 
-First, run the development server:
+## Функциональность MVP
+
+- Создание тестов с тремя типами вопросов
+- Назначение баллов и правильных ответов
+- Прохождение тестов и мгновенная оценка
+- Фильтрация по тегам, сортировка, поиск по названию, пагинация
+- Рейтинг пользователей по сумме набранных баллов
+- Профиль с графиком прогресса, анализом слабых тем и достижениями
+- Генерация квизов с помощью ИИ
+
+## Установка и запуск
+
+1. Клонируйте репозиторий:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/quizmaker.git
+cd quizmaker
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Установите зависимости:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Настройте .env файл
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+BETTERAUTH_SECRET=
+NEXT_PUBLIC_AZURE_API_KEY=
+```
 
-## Learn More
+4. Запустите локальный сервер
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Проектирование и разработка
+Проект был задуман как минимально жизнеспособный продукт (MVP). Сначала был реализован базовый интерфейс конструктора и прохождения тестов. Затем добавлены профили пользователей, рейтинг и простая аналитика.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+База данных была спроектирована с учетом масштабируемости (отдельные таблицы для вопросов, вариантов ответов, результатов и т.д.).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Особое внимание уделялось UX и минимальному количеству кликов до прохождения теста.
 
-## Deploy on Vercel
+## Уникальные подходы
+Интеграция BetterAuth для безопасной и гибкой авторизации.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Использование Drizzle ORM с полной типизацией и миграциями.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Отслеживание слабых сторон пользователя на основе тегов и баллов.
+
+Упор на простоту интерфейса и минимализм.
+
+## Компромиссы
+Анализ коротких ответов выполняется через полное совпадение (без NLP).
+
+ИИ сгенерированые тесты сами выбирают уровень сложности и и количество вопросов, пользователь выбирает только тему
+
+
+## Проблемы
+Присутсвует легаси код
+
+Могут присутсвовать баги, в частности в фильтрации по тегам и попытке заново пройти квиз.
+
+## Почему такой стек?
+Next.js — мощный фреймворк с поддержкой SSR и client-side интерактива.
+
+Supabase — полноценный backend-as-a-service с Postgres, легкий сетап.
+
+BetterAuth — простая и безопасная альтернатива NextAuth.
+
+Drizzle ORM — типобезопасный SQL-код, понятный и масштабируемый.
+
+pnpm — быстрый и надежный менеджер пакетов с поддержкой monorepo.
+
+azure ai - бесплатная генерация на сумму %200 :/
