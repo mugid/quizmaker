@@ -11,13 +11,7 @@ interface UserProfile {
   createdAt: string;
 }
 
-interface ProfilePageProps {
-  // You can add params if this is a dynamic route
-  params?: { userId?: string };
-}
-
-export default async function ProfilePage({ params }: ProfilePageProps = {}) {
-  // Get the current user from your auth system
+export default async function ProfilePage() {
 
   const currentUser = await auth.api.getSession({
     headers: await headers(),
@@ -27,17 +21,9 @@ export default async function ProfilePage({ params }: ProfilePageProps = {}) {
     redirect('/login');
   }
 
-  // If you want to support viewing other users' profiles via params
-  const userId = params?.userId || currentUser.user.id;
+  const userId = currentUser.user.id;
   
-  // For security, you might want to check if the user can view this profile
-  if (userId !== currentUser.user.id) {
-    // Add your authorization logic here
-    // For example, check if profiles are public or if users are friends
-    // redirect('/unauthorized');
-  }
-
-  // Prepare user data for the client component
+ 
   const user: UserProfile = {
     id: currentUser.user.id,
     name: currentUser.user.name || 'Unknown User',
