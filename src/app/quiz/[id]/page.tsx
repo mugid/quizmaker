@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 
 interface QuizPageProps {
   params: {
-    id: string;
+    quizId: string;
   };
 }
 
@@ -100,13 +100,13 @@ export default async function QuizPage({ params }: QuizPageProps) {
 
   return (
     <Suspense fallback={<QuizSkeleton />}>
-      <QuizContent quizId={params.id} userId={userId} />
+      <QuizContent quizId={params.quizId} userId={userId} />
     </Suspense>
   );
 }
 
 export async function generateMetadata({ params }: QuizPageProps) {
-  const quiz = await getQuizWithQuestions(params.id);
+  const quiz = await getQuizWithQuestions(params.quizId);
 
   if (!quiz) {
     return {
