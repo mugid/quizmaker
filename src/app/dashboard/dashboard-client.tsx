@@ -70,7 +70,7 @@ interface DashboardClientProps {
   userId: string
 }
 
-const mockPopularTags = ["JavaScript", "React", "CSS", "Node.js", "Python", "Database", "Algorithm", "Frontend"]
+const mockPopularTags = ["JavaScript", "React", "CSS", "Node.js", "Python", "Database", "Algorithm", "Frontend", "work"]
 
 export function DashboardClient({ initialData, userId }: DashboardClientProps) {
   const router = useRouter()
@@ -274,10 +274,6 @@ export function DashboardClient({ initialData, userId }: DashboardClientProps) {
                   className="pl-10"
                 />
               </div>
-              <Button variant="outline" className="flex items-center space-x-2 bg-transparent">
-                <Filter className="h-4 w-4" />
-                <span>Filters</span>
-              </Button>
             </div>
 
             {/* Popular Tags */}

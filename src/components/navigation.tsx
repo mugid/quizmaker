@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { UserAvatar } from '@/components/user-avatar';
-import { authClient } from '@/lib/auth-client';
-import { Menu, X, Plus, BarChart3, Trophy, User } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { Menu, X, Plus, BarChart3, Trophy, User } from "lucide-react";
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,7 +22,7 @@ export function Navigation() {
 
   const handleSignOut = async () => {
     await authClient.signOut();
-    router.push('/auth/signin');
+    router.push("/auth/signin");
   };
 
   if (!session) {
@@ -37,9 +36,11 @@ export function Navigation() {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">Q</span>
+                <span className="text-primary-foreground font-bold text-sm">
+                  🙇‍♂️
+                </span>
               </div>
-              <span className="font-bold text-xl">QuizMaker</span>
+              <span className="font-bold text-xl">quizzer</span>
             </Link>
           </div>
 
@@ -75,8 +76,7 @@ export function Navigation() {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
-            <UserAvatar user={session.user} />
+          <div className="hidden md:flex items-center">
             <Button variant="ghost" onClick={handleSignOut}>
               Sign Out
             </Button>
@@ -89,7 +89,11 @@ export function Navigation() {
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -129,8 +133,7 @@ export function Navigation() {
               <User className="h-4 w-4" />
               <span>Profile</span>
             </Link>
-            <div className="flex items-center space-x-4 pt-4 border-t">
-              <UserAvatar user={session.user} />
+            <div className="flex items-center pt-4 border-t">
               <Button variant="ghost" onClick={handleSignOut}>
                 Sign Out
               </Button>

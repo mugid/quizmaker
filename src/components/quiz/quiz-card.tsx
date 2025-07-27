@@ -10,6 +10,8 @@ interface QuizCardProps {
   title: string;
   description: string;
   tags: string[];
+  difficulty: string;
+  estimatedTime: number;
   totalPoints: number;
   creatorName: string;
   createdAt: Date;
