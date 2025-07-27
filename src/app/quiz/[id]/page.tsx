@@ -59,6 +59,12 @@ async function QuizContent({
           )
             ? quiz.difficulty
             : "medium") as "easy" | "medium" | "hard",
+          questions: quiz.questions.map((q: any) => ({
+            ...q,
+            type: (["multiple_choice", "checkbox", "short_answer"].includes(q.type)
+              ? q.type
+              : "multiple_choice") as "multiple_choice" | "checkbox" | "short_answer",
+          })),
         }}
         userId={userId}
         bestAttempt={bestAttempt}
