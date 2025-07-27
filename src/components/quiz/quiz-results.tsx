@@ -42,7 +42,7 @@ interface QuizResultsProps {
     totalPoints: number;
     percentage: number;
     completedAt: Date;
-    questionResults: Record<string, { correct: boolean; explanation?: string }>;
+    questionResults: Record<string, { correct: boolean; explanation?: string; userAnswer?: any }>;
     timeSpent: number;
     achievements?: any[];
   };
@@ -177,8 +177,21 @@ export function QuizResults({ quiz, results, onRetake, onGoBack }: QuizResultsPr
         <CardContent className="space-y-4">
           {quiz.questions.map((question, index) => {
             const result = results.questionResults[question.id];
-            const isCorrect = result?.correct || false;
-            
+          
+            // Improved correctness check for array answers
+            let isCorrect = false;
+            if (result) {
+              if (Array.isArray(question.correctAnswers) && Array.isArray(result.userAnswer)) {
+                const correctSet = new Set(question.correctAnswers);
+                const userSet = new Set(result.userAnswer);
+                isCorrect =
+                  correctSet.size === userSet.size &&
+                  [...correctSet].every(ans => userSet.has(ans));
+              } else {
+                isCorrect = result.correct;
+              }
+            }
+          
             return (
               <div
                 key={question.id}

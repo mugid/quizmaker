@@ -16,7 +16,7 @@ interface Question {
   id: string;
   type: 'multiple_choice' | 'checkbox' | 'short_answer';
   question: string;
-  options?: string[];
+  options?: string[] ;
   correctAnswers: any;
   points: number;
   explanation?: string;
@@ -135,7 +135,7 @@ export default function QuizTaker({ quiz, userId, bestAttempt }: QuizTakerProps)
 
       questionResults[question.id] = {
         correct: isCorrect,
-        explanation: question.explanation
+        explanation: question.explanation ?? undefined
       };
     });
 
