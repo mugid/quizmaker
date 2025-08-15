@@ -1,8 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { generateObject } from "ai";
-import { createAzure } from "@ai-sdk/azure";
-import z from "zod";
+import {
+  generateObject,
+  experimental_generateImage as generateImage,
+} from "ai";
+import { openai } from "@ai-sdk/openai";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -30,14 +32,15 @@ export function generateSlug(text: string): string {
 }
 
 export async function GenerateQuiz(userInput: string) {
-  const azure = createAzure({
-    resourceName: "beksl-mcqgvjfg-swedencentral",
-    apiKey: process.env.NEXT_PUBLIC_AZURE_API_KEY,
+  const { image } = await generateImage({
+    model: openai.image("dall-e-3"),
+    prompt: `Image that matches ${userInput}`,
+    size: "1024x1024",
   });
 
   const { object } = await generateObject({
-    model: azure("o4-mini"),
-    output: 'no-schema',
+    model: openai("o4-mini"),
+    output: "no-schema",
     prompt: `
 You are an AI quiz generator.
 
